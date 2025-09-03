@@ -18,13 +18,11 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public List<ProductDto> getAllProducts() {
+    public List<ProductDto> getProducts(@RequestParam(required = false) ProductType type) {
+        if (type != null) {
+            return productService.getProductsByType(type);
+        }
         return productService.getAllProducts();
-    }
-
-    @GetMapping("/type/{type}")
-    public List<ProductDto> getProductsByType(@PathVariable ProductType type) {
-        return productService.getProductsByType(type);
     }
 
     @GetMapping("/{id}")

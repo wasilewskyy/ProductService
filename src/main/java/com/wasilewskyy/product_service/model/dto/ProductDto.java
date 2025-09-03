@@ -19,21 +19,6 @@ public class ProductDto {
     private BigDecimal price;
     private String description;
     private ProductType type;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private Boolean active;
-    private Boolean hasConfigurations;
-
-    private String baseProcessor;
-    private String baseRam;
-    private String baseStorage;
-
-    private String baseColor;
-    private String baseBatteryCapacity;
-
-    private String brand;
-    private String model;
-    private Integer warrantyMonths;
-
-    private List<ProductConfigurationDto> availableConfigurations;
+    private List<ProductConfigurationDto> configurations;
 }
