@@ -30,4 +30,17 @@ public class ProductConfiguration {
     private String displayName;
     private BigDecimal additionalPrice;
     private Boolean available = true;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductConfiguration productConfiguration = (ProductConfiguration) o;
+        return id != null && id.equals(productConfiguration.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
