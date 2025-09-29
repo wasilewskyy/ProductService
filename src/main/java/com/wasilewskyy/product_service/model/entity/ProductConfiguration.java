@@ -29,7 +29,7 @@ public class ProductConfiguration {
     private String value;
     private String displayName;
     private BigDecimal additionalPrice;
-    private Boolean available = true;
+    private Boolean available;
 
     @Override
     public boolean equals(Object o) {

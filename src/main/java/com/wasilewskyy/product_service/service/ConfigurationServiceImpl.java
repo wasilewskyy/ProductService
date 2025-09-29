@@ -2,7 +2,6 @@ package com.wasilewskyy.product_service.service;
 
 import com.wasilewskyy.product_service.exception.ProductNotFoundException;
 import com.wasilewskyy.product_service.mapper.ProductMapper;
-import com.wasilewskyy.product_service.model.dto.ConfigurationOptionDto;
 import com.wasilewskyy.product_service.model.dto.ProductConfigurationGroupDto;
 import com.wasilewskyy.product_service.model.dto.ProductDto;
 import com.wasilewskyy.product_service.model.entity.Product;
@@ -34,6 +33,21 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         List<ProductConfiguration> configs =
                 configurationRepository.findByProductIdAndAvailableTrue(product.getId());
 
+        return groupConfigurations(configs);
+    }
+
+    @Override
+    public ProductDto addConfiguration(Long productId, AddConfigurationRequest request) {
+        Product product = findProduct(productId);
+        ProductConfiguration config = buildConfiguration(product, request);
+
+        configurationRepository.save(config);
+        product.getConfigurations().add(config);
+
+        return productMapper.toDto(productRepository.save(product));
+    }
+
+    private List<ProductConfigurationGroupDto> groupConfigurations(List<ProductConfiguration> configs) {
         return configs.stream()
                 .collect(Collectors.groupingBy(ProductConfiguration::getType))
                 .entrySet().stream()
@@ -41,23 +55,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                         entry.getKey(),
                         entry.getKey().name(),
                         entry.getValue().stream()
-                                .map(cfg -> new ConfigurationOptionDto(
-                                        cfg.getId(),
-                                        cfg.getName(),
-                                        cfg.getValue(),
-                                        cfg.getDisplayName(),
-                                        cfg.getAdditionalPrice(),
-                                        cfg.getAvailable()
-                                ))
+                                .map(productMapper::toOptionDto)
                                 .toList()
                 ))
                 .toList();
     }
 
-    @Override
-    public ProductDto addConfiguration(Long productId, AddConfigurationRequest request) {
-        Product product = findProduct(productId);
-
+    private ProductConfiguration buildConfiguration(Product product, AddConfigurationRequest request) {
         ProductConfiguration config = new ProductConfiguration();
         config.setProduct(product);
         config.setType(request.getType());
@@ -66,11 +70,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         config.setDisplayName(request.getDisplayName());
         config.setAdditionalPrice(request.getAdditionalPrice());
         config.setAvailable(true);
-
-        configurationRepository.save(config);
-        product.getConfigurations().add(config);
-
-        return productMapper.toDto(productRepository.save(product));
+        return config;
     }
 
     private Product findProduct(Long id) {

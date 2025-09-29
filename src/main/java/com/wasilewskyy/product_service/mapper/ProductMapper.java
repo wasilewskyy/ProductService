@@ -1,5 +1,6 @@
 package com.wasilewskyy.product_service.mapper;
 
+import com.wasilewskyy.product_service.model.dto.ConfigurationOptionDto;
 import com.wasilewskyy.product_service.model.dto.ProductConfigurationDto;
 import com.wasilewskyy.product_service.model.dto.ProductDto;
 import com.wasilewskyy.product_service.model.entity.Product;
@@ -19,4 +20,6 @@ public interface ProductMapper {
     void updateEntity(@MappingTarget Product product, UpdateProductRequest request);
 
     ProductConfigurationDto toConfigurationDto(ProductConfiguration config);
+
+    ConfigurationOptionDto toOptionDto(ProductConfiguration config);
 }
